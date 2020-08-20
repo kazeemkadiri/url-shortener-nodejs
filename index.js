@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dns = require("dns");
 const srs = require("secure-random-string");
+const UrlSchema = require("./schemas/url-record.js");
 
 
 //Connect to mongodb database using mongoose
@@ -40,9 +41,20 @@ app.route("/api/shorturl/new/")
           //Generate short random string
           const randomString = srs({alphanumeric:true, length: 7});
 	  
- 
+	  const UrlModel = mongoose.model("UrlRecord", UrlSchema);
 
-	  res.send("Valid on lookup");
+	  const urlDocument = new UrlModel({
+  	        original_url: urlString,
+	        short_url: randomString
+   	  }); 
+  	  
+	  urlDocument.save((err, doc)=>{
+	    if(err)console.log("Failed to save record");
+	    
+	    res.json(doc);
+
+  	  });
+
         }
       });
     }else{
