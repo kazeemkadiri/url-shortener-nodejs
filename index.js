@@ -11,4 +11,18 @@ useUnifiedTopology: true});
 //Setup body-parser middleware
 app.use(bodyParser.urlencoded({extended:false});
 
+//Setup route for homepage url
+app.route("/")
+  .get((req, res)=>{
+    res.sendFile(__dirname + "/public/index.html");
+  });
+
+//Setup route that receives the original url 
+//and sends back a short url
+/*app.route("/api/shorturl/new/")
+  .post((req,res)=>{
+    res.send(req.body.url);
+  });
+*/
+
 app.listen(process.env.PORT || 3000);
