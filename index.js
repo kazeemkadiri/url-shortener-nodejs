@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const dns = require("dns");
+const srs = require("secure-random-string");
+
 
 //Connect to mongodb database using mongoose
 mongoose.connect("mongodb://127.0.0.1/my_database:27017"
@@ -25,13 +28,28 @@ app.route("/api/shorturl/new/")
     const urlString = req.body.url;
 
     //Check if valid url string using regex
-    if(/^http(s)?:\/\/(www.)?\w+\.\w{2,}(\/\w+)*/.test(urlString)){
-      
-      //Use dns module to lookup the address
-    }
+    if(/^(http(s)?:\/\/)?(www.)?\w+\.\w{2,}(\/\w+)*/.test(urlString)){
 
-    //else return error message
-    res.json({"error":"invalid URL"});
+      //Use dns module to lookup the address
+      dns.lookup(urlString,(err, addresses)=>{
+	if(err){
+          res.json({"error": "invalid URL"});
+        }
+	else{
+       	  //if valid url after lookup
+          //Generate short random string
+          const randomString = srs({alphanumeric:true, length: 7});
+	  
+ 
+
+	  res.send("Valid on lookup");
+        }
+      });
+    }else{
+
+      //else return error message
+      res.json({"error":"invalid URL"});
+    }
   });
 
 
