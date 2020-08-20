@@ -64,5 +64,15 @@ app.route("/api/shorturl/new/")
     }
   });
 
+app.route("/:short_url").get((req,res)=>{
+  const urlModel = mongoose.model("UrlRecord",UrlSchema);
+
+  urlModel.findOne({short_url:req.params.short_url},
+    (err, doc)=>{
+      if(err)res.json({error: "Not Found"});
+ 
+         res.redirect(`https://${doc.original_url}`);
+    });
+});
 
 app.listen(process.env.PORT || 3200);
