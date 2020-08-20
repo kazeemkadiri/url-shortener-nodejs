@@ -21,7 +21,17 @@ app.route("/")
 //and sends back a short url
 app.route("/api/shorturl/new/")
   .post((req,res)=>{
-    res.send(req.body.url);
+
+    const urlString = req.body.url;
+
+    //Check if valid url string using regex
+    if(/^http(s)?:\/\/(www.)?\w+\.\w{2,}(\/\w+)*/.test(urlString)){
+      
+      //Use dns module to lookup the address
+    }
+
+    //else return error message
+    res.json({"error":"invalid URL"});
   });
 
 
